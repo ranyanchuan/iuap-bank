@@ -157,7 +157,7 @@ class IndexView extends Component {
 
                         <Form className="auto-form">
                             <FormItem layoutOpt={layoutOpt} className="auto-form-item">
-                                <Label className="auto-label">司龄</Label>
+                                <Label className="auto-label red-star">司龄</Label>
                                 <div className="auto-content">
                                     <InputNumber
                                         iconStyle="one"
@@ -179,7 +179,19 @@ class IndexView extends Component {
                             </FormItem>
 
                             <FormItem layoutOpt={layoutOpt} className="auto-form-item">
-                                <Label className="auto-label">司龄</Label>
+                                <Label className="auto-label red-star">司龄</Label>
+                                <div className="auto-content">
+                                    <FormControl className="auto-input"
+                                                 {...getFieldProps('code', {
+                                                     initialValue: ''
+                                                 })}
+                                    />
+                                    <FormError errorMsg={getFieldError('serviceYearsCompany')}/>
+                                </div>
+                            </FormItem>
+
+                            <FormItem layoutOpt={layoutOpt} className="auto-form-item">
+                                <Label className="auto-label red-star">司龄</Label>
                                 <div className="auto-content">
                                     <InputNumber
                                         iconStyle="one"
@@ -202,7 +214,7 @@ class IndexView extends Component {
 
 
                             <FormItem className="auto-form-item">
-                                <Label className="auto-label">司龄</Label>
+                                <Label className="auto-label red-star">司龄</Label>
                                 <div className="auto-content">
                                     <InputNumber
                                         iconStyle="one"
@@ -247,7 +259,7 @@ class IndexView extends Component {
 
                             <FormItem className="auto-form-item">
                                 <Label className="auto-label">领取方式</Label>
-                                <div className="auto-content">
+                                <div className="auto-content red-star">
                                     <Select
                                         {...getFieldProps('pick1Type', {
                                                 initialValue: "",
@@ -269,8 +281,6 @@ class IndexView extends Component {
 
                     </RightContainer>
                 </AltWidthLayout>
-                <div></div>
-
             </div>
         )
     }
