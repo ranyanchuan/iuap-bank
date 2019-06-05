@@ -14,7 +14,7 @@ class AltWidthLayout extends Component {
         this.state = {
             showModal: false,
             resizeLeft: '0px',
-            leftWidth: 'calc(30% - 1px)',
+            leftWidth: 'calc(30% - 5px)',
             rightWidth: '70%',
             contentWidth: '100%',
         }
@@ -25,7 +25,7 @@ class AltWidthLayout extends Component {
 
         let {contentWidth = '100%', leftWidth = '200px', rightWidth} = this.props;
         if (!rightWidth) {
-            rightWidth = `calc(100% - 1px - ${leftWidth})`;
+            rightWidth = `calc(100% - 5px - ${leftWidth})`;
         }
         this.setState({contentWidth, leftWidth, rightWidth});
 
@@ -70,8 +70,6 @@ class AltWidthLayout extends Component {
         const _this = this;
         const {children} = _this.props;
         const {leftWidth, resizeLeft, rightWidth, contentWidth} = _this.state;
-
-        console.log("getHeight");
 
         let leftContainer = null;
         let rightContainer = null;

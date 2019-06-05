@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 const propTypes = {
-    errorMsg: PropTypes.string,
+    // errorMsg: PropTypes.string,
     className:PropTypes.string
 };
 
 const defaultProps = {
-    errorMsg: '',
+    // errorMsg: '',
     className:''
 };
 

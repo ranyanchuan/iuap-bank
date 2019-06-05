@@ -11,7 +11,8 @@ export default {
     // 设置当前 Model 所需的初始化 state
     initialState: {
         showLoading: false,
-
+        treeData: null,
+        infoData: null,
     },
     reducers: {
         /**
@@ -27,7 +28,53 @@ export default {
         }
     },
     effects: {
+        /**
+         * 加载列表数据
+         * @param {*} param
+         * @param {*} getState
+         */
+        async getProductTreeData(param = {}, getState) {
+            // 正在加载数据，显示加载 Loading 图标
+            actions.query.updateState({showLoading: true});
+            const {result} = processData(await api.getTreeData(param));  // 调用 getTreeData 请求数据
+            const {data: res} = result;
+            let updateData = {showLoading: false};
+            if (res) {
+                // const {pageParams} = param;
+                // const queryObj = structureObj(res, pageParams);
+                // updateData.queryObj = queryObj;
+                // updateData.queryParam = param;
+                console.log("xxxx")
+            } else {
+                // 如果请求出错,数据初始化
+                // const {queryObj} = getState().query;
+                updateData.treeData = null;
+                updateData.infoData = null;
+            }
+            actions.query.updateState(updateData); // 更新数据和查询条件
+        },
 
+
+        async getProductInfoData(param = {}, getState) {
+            // 正在加载数据，显示加载 Loading 图标
+            actions.query.updateState({showLoading: true});
+            const {result} = processData(await api.getInfoData(param));  // 调用 getTreeData 请求数据
+            const {data: res} = result;
+            let updateData = {showLoading: false};
+            if (res) {
+                // const {pageParams} = param;
+                // const queryObj = structureObj(res, pageParams);
+                // updateData.queryObj = queryObj;
+                // updateData.queryParam = param;
+                console.log("xxxx")
+            } else {
+                // 如果请求出错,数据初始化
+                // const {queryObj} = getState().query;
+                updateData.treeData = null;
+                updateData.infoData = null;
+            }
+            actions.query.updateState(updateData); // 更新数据和查询条件
+        },
 
 
     }

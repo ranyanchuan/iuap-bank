@@ -1,35 +1,32 @@
 import request from "utils/request";
-import { deepClone } from 'utils';
+import {deepClone} from 'utils';
 //定义接口地址
 const URL = {
-    "GET_LIST": `${GROBAL_HTTP_CTX}/query_allowances/list`,
-    "GET_LIST_BY_COL": `${GROBAL_HTTP_CTX}/query_allowances/distinct`,
+    "GET_TREE": `${GROBAL_HTTP_CTX}/query_allowances/list`,
+    "GET_INFO": `${GROBAL_HTTP_CTX}/query_allowances/distinct`,
 }
 
 /**
- * 获取列表
+ * 获取树信息
  * @param {*} params
  */
-export const getList = (param) => {
-    let newParam = Object.assign({}, param),
-        pageParams = deepClone(newParam.pageParams);
-
-    delete newParam.pageParams;
-
-    return request(URL.GET_LIST, {
-        method: "post",
-        data: newParam,
-        param: pageParams
-    });
+export const getTreeData = (param) => {
+    return [];
+    // return request(URL.GET_TREE, {
+    //     method: "post",
+    //     data: param
+    // });
 }
 
 /**
- * 获取行过滤的下拉数据
+ * 获取树节点档案信息
  *   @param {*} params
  */
-export const getListByCol = (param) => {
-    return request(URL.GET_LIST_BY_COL, {
-        method: "post",
-        data: param
-    });
+export const getInfoData = (param) => {
+
+    return [];
+    // return request(URL.GET_INFO, {
+    //     method: "post",
+    //     data: param
+    // });
 }
