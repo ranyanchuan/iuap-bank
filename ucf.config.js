@@ -40,7 +40,7 @@ module.exports = (env, argv) => {
             {
                 enable: true,
                 headers: {
-                    "Referer": "http://172.20.52.215:8888"
+                    "Referer": "http://10.10.4.229"
                 },
                 //要代理访问的对方路由
                 router: [
@@ -50,9 +50,10 @@ module.exports = (env, argv) => {
                     '/wbalone',
                     '/print_service/',
                     '/eiap-plus',
-                    '/iuap-print/'
+                    '/iuap-print/',
+                    '/pubserver-be/',
                 ],
-                url: 'http://172.20.52.215:8888'
+                url: 'http://10.10.4.229'
             }
         ],
         // 静态托管服务
@@ -68,6 +69,7 @@ module.exports = (env, argv) => {
         // 全局环境变量,GROBAL_HTTP_CTX build时需要设置项目名称
         global_env: {
             GROBAL_HTTP_CTX: isBuild ? JSON.stringify("/ucf-webapp") : JSON.stringify("/mock/936"),
+            GROBAL_HTTP_TREE: JSON.stringify("/pubserver-be"),
         },
         // 别名配置
         alias: {

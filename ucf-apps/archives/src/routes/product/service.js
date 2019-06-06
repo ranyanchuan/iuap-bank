@@ -2,8 +2,11 @@ import request from "utils/request";
 import {deepClone} from 'utils';
 //定义接口地址
 const URL = {
-    "GET_TREE": `${GROBAL_HTTP_CTX}/query_allowances/list`,
-    "GET_INFO": `${GROBAL_HTTP_CTX}/query_allowances/distinct`,
+    "GET_TREE": `${GROBAL_HTTP_TREE}/product/getSonNodes`,
+    "ADD_PRODUCT": `${GROBAL_HTTP_TREE}/product/insertSelective`,
+    "UPD_PRODUCT": `${GROBAL_HTTP_TREE}/product/updateSelective`,
+    "GET_PRODUCT": `${GROBAL_HTTP_TREE}/product/updateSelective`, // 获取节点档案信息与更新同一接口
+    "DEL_PRODUCT": `${GROBAL_HTTP_TREE}/product/deleteBatch`,
 }
 
 /**
@@ -11,22 +14,55 @@ const URL = {
  * @param {*} params
  */
 export const getTreeData = (param) => {
-    return [];
-    // return request(URL.GET_TREE, {
-    //     method: "post",
-    //     data: param
-    // });
+    return request(URL.GET_TREE, {
+        method: "get",
+        param
+    });
+}
+
+
+/**
+ * 添加节点档案信息
+ * @param {*} params
+ */
+export const addProduct = (param) => {
+    return request(URL.ADD_PRODUCT, {
+        method: "post",
+        data: param
+    });
+}
+
+
+/**
+ * 更新节点档案信息
+ * @param {*} params
+ */
+export const updateProduct = (param) => {
+    return request(URL.UPD_PRODUCT, {
+        method: "post",
+        data: param
+    });
+}
+
+
+/**
+ * 获取节点档案信息
+ * @param {*} params
+ */
+export const getProduct = (param) => {
+    return request(URL.GET_PRODUCT, {
+        method: "post",
+        data: param
+    });
 }
 
 /**
- * 获取树节点档案信息
- *   @param {*} params
+ * 删除节点档案信息
+ * @param {*} params
  */
-export const getInfoData = (param) => {
-
-    return [];
-    // return request(URL.GET_INFO, {
-    //     method: "post",
-    //     data: param
-    // });
+export const delProduct = (param) => {
+    return request(URL.DEL_PRODUCT, {
+        method: "post",
+        data: param
+    });
 }
