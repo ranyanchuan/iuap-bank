@@ -1,0 +1,53 @@
+.auto-form {
+  margin-top: 10px;
+}
+
+.auto-form-item {
+  float: left;
+  width: 320px;
+  padding: 0 !important;
+  .auto-label {
+    float: left;
+    display: block;
+    line-height: 32px;
+    padding-right: 5px !important;
+    width: 110px;
+  }
+  .u-label:after {
+    display: inline-block;
+    margin-right: 4px;
+    content: "  ";
+    line-height: 1;
+    font-size: 14px;
+    font-family: monospace;
+    width: 5px;
+  }
+
+  .red-star:after {
+    content: "*";
+    color: #f5222d;
+  }
+
+  .auto-content {
+    float: left;
+    display: block;
+    width: 200px;
+
+    .auto-input {
+      width: 100%;
+    }
+    .u-select {
+      width: 100%;
+    }
+
+    .error {
+      color: #ffff;
+      font-size: 12px;
+      padding-left: 12px;
+      background-color: #f44336;
+      width: 100%;
+      display: block;
+    }
+
+  }
+}

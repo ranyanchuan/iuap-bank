@@ -8,4 +8,4 @@ import model from './model'
 
 mirror.model(model);
 // 数据和组件UI关联、绑定
-export default connect(state => state.product,null)(IndexView);
+export default connect(state => state.product, null)(IndexView);

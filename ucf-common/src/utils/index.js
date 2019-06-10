@@ -23,7 +23,7 @@ export const Info = (msg) => {
  * @param {*} successMsg 成功提示
  */
 export const processData = (response, successMsg) => {
-    let result={};
+    let result = {};
     try {
         if (typeof response != 'object') {
             Error('数据返回出错：1、请确保服务运行正常；2、请确保您的前端工程代理服务正常；3、请确认您已在本地登录过应用平台');
@@ -617,3 +617,25 @@ export function getPageParam(value, type, pageParams) {
     return {pageIndex, pageSize}
 
 }
+
+
+export function addTreeChildren(tree, content, parentId) {
+
+    if (tree && tree.length === 0) {
+        return content;
+    }
+    for (const [index, item] of tree.entries()) {
+        let {id, children} = item;
+        if (id === parentId) {
+            tree[index].children = content;
+            break;
+        } else {
+            if (children && children.length > 0) { // 递归查询
+                addTreeChildren(children, content, parentId)
+            }
+        }
+    }
+    return tree;
+
+}
+

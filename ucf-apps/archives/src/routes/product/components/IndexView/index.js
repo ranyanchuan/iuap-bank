@@ -16,12 +16,21 @@ const {TreeNode} = Tree;
 
 const {LeftContainer, RightContainer} = AltWidthLayout;
 
+function test() {
+    console.log("xxxx");
+    debugger
+}
+
 
 class IndexView extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             searchValue: '',
+            searchTreeId: '',
+            btnStatus: 'view',
+            expandedKeys: [],
             editNode: {
                 isHover: "",
                 editKey: ""
@@ -31,17 +40,40 @@ class IndexView extends Component {
 
     }
 
+    //加载树信息
+    componentDidMount() {
+        actions.product.loadTree();
+    }
+
+
+    //
+    // test1(){
+    //     console.log("xxxx",this);
+    //     debugger
+    // }
+
+
+    componentWillReceiveProps(nextProps) {
+        const {content} = this.props;
+        const {content: nextContent} = nextProps;
+        if (nextContent && nextContent.length > 0 && nextContent !== content) {
+            // 默认选中第一个
+            const {id: searchTreeId} = nextContent[0];
+            this.setState({searchTreeId});
+        }
+
+    }
+
 
     onExpand = expandedKeys => {
+        this.setState({expandedKeys})
         // expandedKeys为指定展开的节点
-        console.log("xxxx000000", expandedKeys)
-        actions.product.updateState({
-            searchRes: {
-                expandedKeys,
-                autoExpandParent: false
-            }
-        })
-
+        // actions.product.updateState({
+        //     searchRes: {
+        //         expandedKeys,
+        //         autoExpandParent: false
+        //     }
+        // })
     }
 
     /**
@@ -81,36 +113,15 @@ class IndexView extends Component {
      * @param {Object} e e为当前选中节点的事件信息
      */
     onSelect = (value, e) => {
-
-        console.log("选中节点", value)
-
-        // let _this = this,
-        //     {selectedNodes: nodeArray} = e,
-        //     search_treeId = value.length ? value[0] : "",
-        //     title = "",
-        //     hierarchy = "";
-        // if (nodeArray.length) {
-        //     let {props: nodeProps, props: {title: {props: {children}}}} = nodeArray[0];
-        //     title = children[2];
-        //     hierarchy = nodeProps['hierarchy'];
-        // }
-        //
-        // let {paginationParam} = _this.props,
-        //     reqParam = {};
-        //
-        // reqParam = Object.assign({}, paginationParam.reqParam || {}, {
-        //     search_treeId,
-        //     title,
-        //     hierarchy
-        // });
-        // actions.product.loadTable(reqParam);
-
+        if (value && value.length > 0) {
+            //  更新选中节点
+            const searchTreeId = value[0];
+            this.setState({searchTreeId});
+            // 获取节点表单数据
+            actions.product.getProduct({id: searchTreeId});
+        }
     };
 
-
-    componentDidMount() {
-        actions.product.loadTree();
-    }
 
     /**
      *
@@ -130,7 +141,6 @@ class IndexView extends Component {
                     id
                 })
             }
-
             resolve();
         }).then(result => {
             console.log("result", result);
@@ -173,33 +183,132 @@ class IndexView extends Component {
                 }
             }
         }
-
         return isChecked;
     }
 
 
     // 删除节点
     onDelete = () => {
-        actions.product.delProduct();
+        const {searchTreeId} = this.state;
+        actions.product.delProduct([{id: searchTreeId}]);
     }
 
 
     // 保存节点
     onSave = () => {
-        actions.product.addProduct();
-        actions.product.updateProduct();
+
+        // 获取表单数据
+        let formData = this.child.onSaveForm();
+        if (formData) {
+            const {searchTreeId} = this.state;
+            formData.parentId = searchTreeId;
+            // 添加表单数据
+            actions.product.addProduct(formData);
+        }
+
+        // actions.product.addProduct();
+        // actions.product.updateProduct();
+    }
+
+
+    // 添加
+    onAddStatus = () => {
+        this.setState({btnStatus: 'add'})
+        actions.product.updateState({archivesInfo: {}}); // 更新 archivesInfo
+    }
+
+    // 编辑
+    onUpdateStatus = () => {
+        this.setState({btnStatus: 'update'});
+        // todo 获取当前节点内容
+    }
+
+
+    onAddNode = (item) => {
+        console.log("item", item);
+
+        const {id, children} = item;
+        if (id) {
+
+
+        }
+
+        const data = this.state.treeData;
+        let parNode;
+        if (prKey) {
+            // 如果prKey存在则搜索父节点进行添加
+            parNode = this.getNodeByKey(data, prKey);
+            //如果父节点存在的话，添加到父节点上
+            if (parNode) {
+                if (!parNode.children) {
+                    parNode.children = [];
+                }
+                // 如果key不存在就动态生成一个
+                if (!nodeItem.key) {
+                    nodeItem.key = prKey + parNode.children.length + 1;
+                }
+                parNode.children.push(nodeItem);
+            }
+        } else {
+            // 没有穿prKey添加到根下成为一级节点
+            if (!nodeItem.key) {
+                nodeItem.key = "0-" + data.length + 1;
+            }
+            data.push(nodeItem);
+        }
+
+        this.setState({
+            data
+        });
+
+    }
+
+
+    /**
+     * 增加节点
+     * @param string prKey    [父节点key]
+     * @param object nodeItem [子节点信息]
+     */
+    addNode(prKey, nodeItem) {
+        const data = this.state.treeData;
+        let parNode;
+        if (prKey) {
+            // 如果prKey存在则搜索父节点进行添加
+            parNode = this.getNodeByKey(data, prKey);
+            //如果父节点存在的话，添加到父节点上
+            if (parNode) {
+                if (!parNode.children) {
+                    parNode.children = [];
+                }
+                // 如果key不存在就动态生成一个
+                if (!nodeItem.key) {
+                    nodeItem.key = prKey + parNode.children.length + 1;
+                }
+                parNode.children.push(nodeItem);
+            }
+        } else {
+            // 没有穿prKey添加到根下成为一级节点
+            if (!nodeItem.key) {
+                nodeItem.key = "0-" + data.length + 1;
+            }
+            data.push(nodeItem);
+        }
+
+        this.setState({
+            data
+        });
     }
 
 
     render() {
         const _this = this;
-        let {showLoading, content, searchRes, paginationParam} = _this.props,
-            {expandedKeys, autoExpandParent} = searchRes;
-        const {reqParam = {}} = paginationParam;
-        const {search_treeId} = reqParam;
+        let {showLoading, content, searchRes, archivesInfo} = _this.props,
+            {autoExpandParent} = searchRes;
 
-        const {searchValue} = _this.state;
 
+        const {searchValue, searchTreeId, btnStatus, expandedKeys} = _this.state;
+
+        console.log("content", content);
 
         // 节点循环
         const loop2 = data => data.map(item => {
@@ -215,6 +324,8 @@ class IndexView extends Component {
                     {afterStr}
 				</span>
             ) : <span>{item.name}</span>;
+
+
             if (item.children && item.children.length) {
                 return <TreeNode
                     className='tree-node'
@@ -230,19 +341,17 @@ class IndexView extends Component {
                     hierarchy={item.parentId}
                     title={title}
                     key={item.id}
-                    // isLeaf={typeof item['is_leaf'] !== 'undefined' ? item.isSon === 1 : true}
-                    isLeaf={item['is_leaf']}
+                    isLeaf={(item.isSon && item.isSon.toString() === '1') ? true : false}
                 />
             }
         })
 
+
         return (
             <div className='product'>
                 <Loading showBackDrop={true} show={showLoading} fullScreen={true}/>
-                <Header title="树型档案示例">
-                    <Button colors="primary" onClick={this.onSave} className="right-button">保存</Button>
-                    <Button onClick={this.onDelete} className="right-button">删除</Button>
-                </Header>
+
+                <Header title="左树右卡" back={true}/>
 
                 <AltWidthLayout
                     // contentWidth={}
@@ -251,9 +360,7 @@ class IndexView extends Component {
                 >
                     <LeftContainer>
                         <div className='tree'>
-                            <div className='tree-head'>
-                                组织机构
-                            </div>
+
                             <div className='tree-search'>
                                 <FormControl
                                     className="search-box"
@@ -305,7 +412,7 @@ class IndexView extends Component {
                                         // 异步加载数据
                                         loadData={_this.onLoadData}
 
-                                        selectedKeys={[search_treeId]}
+                                        selectedKeys={[searchTreeId]}
                                     >
                                         {loop2(content)}
                                     </Tree>
@@ -319,7 +426,26 @@ class IndexView extends Component {
                         </div>
                     </LeftContainer>
                     <RightContainer>
-                        <TreeForm/>
+
+                        {!['add', 'update'].includes(btnStatus) ?
+                            <div className="action-content">
+
+                                <Button colors="primary" onClick={this.onAddStatus}>添加</Button>
+                                <Button onClick={this.onUpdateStatus} bordered>编辑</Button>
+                                <Button onClick={this.onDelete} bordered>删除</Button>
+                            </div> :
+                            <div className="action-content">
+                                <Button colors="primary" onClick={this.onSave}>保存</Button>
+                                <Button onClick={this.onDelete} bordered>取消</Button>
+                            </div>
+                        }
+
+
+                        <TreeForm  // 设置ref属性
+                            onRef={ref => this.child = ref}
+                            archivesInfo={archivesInfo}
+                            status={['add', 'update'].includes(btnStatus) ? false : true}
+                        />
                     </RightContainer>
                 </AltWidthLayout>
             </div>

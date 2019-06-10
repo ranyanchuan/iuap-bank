@@ -3,7 +3,7 @@ import {actions} from "mirrorx";
 import * as api from "./service";
 // 接口返回数据公共处理方法，根据具体需要
 
-import {processData, addChild, handleChild, deepClone} from "utils";
+import {processData, addChild, handleChild, deepClone, addTreeChildren} from "utils";
 
 export default {
     // 确定 Store 中的数据模型作用域
@@ -12,6 +12,7 @@ export default {
     initialState: {
         showLoading: false,
         content: [], // 树内容
+        archivesInfo: {}, // 档案信息
         cacheTree: [],
         paginationParam: {
             reqParam: {
@@ -60,56 +61,45 @@ export default {
          * @param {*} getState
          */
         async loadTree(param, getState) {
-            console.log("param", param)
-            let cacheTree = getState().product.cacheTree;
+
             let {result} = processData(await api.getTreeData(param));
             let {data: res} = result;
-            let handledContent = [];
+
             let content = res && res.content || [];
-            cacheTree = res && res.content && cacheTree.concat(res.content);
-            let cacheContent = deepClone(getState().product.content);
-            if (cacheContent.length === 0) {
-                handledContent = deepClone(content);
-            } else {
 
-                handledContent = addChild(cacheContent, content);
+            let cacheTree = deepClone(getState().product.content);
 
-                console.log("addChild", handledContent)
-            }
-            actions.product.updateState({
-                content: handledContent,
-                cacheTree
-            })
+            const {id} = param || {};
+
+            const newContent = addTreeChildren(cacheTree, content, id);
+            actions.product.updateState({content: newContent});
+
+
         },
 
         // 获取档案
         async getProduct(param = {}, getState) {
             // 正在加载数据，显示加载 Loading 图标
-            actions.query.updateState({showLoading: true});
+            actions.product.updateState({showLoading: true});
             const {result} = processData(await api.getProduct(param));  // 调用 getTreeData 请求数据
             const {data: res} = result;
-            let updateData = {showLoading: false};
-            if (res) {
-                // const {pageParams} = param;
-                // const queryObj = structureObj(res, pageParams);
-                // updateData.queryObj = queryObj;
-                // updateData.queryParam = param;
-                console.log("xxxx")
-            } else {
-                // 如果请求出错,数据初始化
-                // const {queryObj} = getState().query;
-                updateData.treeData = null;
-                updateData.infoData = null;
-            }
-            actions.query.updateState(updateData); // 更新数据和查询条件
+            // 获取最新数据
+            const {content: archivesInfo} = res || {};
+            actions.product.updateState({archivesInfo, showLoading: false}); // 更新数据和状态
         },
 
         // 添加档案
         async addProduct(param = {}, getState) {
-            let {result} = processData(await api.addProduct(param), '添加成功');
+
+            const {result} = processData(await api.addProduct(param), '添加成功');
+            debugger
             const {data: res} = result;
+            let parentContent = getState().product.content;
             if (res) {
-                console.log("添加成功")
+                console.log("添加成功", res)
+                let currentContent = res && res.content || [];
+                const content = addChild(parentContent, currentContent);
+                actions.product.updateState({content});
             }
         },
 
