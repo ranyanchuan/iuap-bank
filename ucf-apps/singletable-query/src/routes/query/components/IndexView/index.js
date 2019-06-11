@@ -69,6 +69,8 @@ class IndexView extends Component {
         }
         if (key === "year") {  // 跳转新页面
             const {code, name, sexEnumValue, levelName} = record;
+            console.log("actions",actions);
+            debugger
             actions.routing.push({
                 pathname: '/employee',
                 search: queryString.stringify({code, name, sexEnumValue, levelName})

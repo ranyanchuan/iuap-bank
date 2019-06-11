@@ -3,7 +3,15 @@ import {actions} from "mirrorx";
 import * as api from "./service";
 // 接口返回数据公共处理方法，根据具体需要
 
-import {processData, addChild, handleChild, deepClone, addTreeChildren, delTreeChildren} from "utils";
+import {
+    processData,
+    addChild,
+    handleChild,
+    deepClone,
+    addTreeChildren,
+    delTreeChildren,
+    updTreeChildren
+} from "utils";
 
 export default {
     // 确定 Store 中的数据模型作用域
@@ -87,36 +95,59 @@ export default {
         },
 
         // 添加档案
-        async addProduct(param = {}, getState) {
+        async addProduct({param, callback}, getState) {
 
+            actions.product.updateState({showLoading: true});
             const {result} = processData(await api.addProduct(param), '添加成功');
 
             const {data: res} = result;
             let parentContent = getState().product.content;
+            // 取消loading
+            let temp = {showLoading: false};
             if (res) {
                 const {parentId} = param;
-                let currentContent = res && res.content || [];
-                const content = addTreeChildren(parentContent, currentContent, parentId);
-                actions.product.updateState({content});
+                temp.content = addTreeChildren(parentContent, [res], parentId);
+                // 更新选中数据
+                temp.archivesInfo = res;
             }
+            actions.product.updateState(temp);
+            callback(res);
         },
 
         // 更新档案
-        async updateProduct(param = {}, getState) {
+        async updateProduct({param, callback}, getState) {
             let {result} = processData(await api.updateProduct(param), '更新成功');
+
             const {data: res} = result;
+            let parentContent = getState().product.content;
+            // 取消loading
+            let temp = {showLoading: false};
             if (res) {
-                console.log("更新成功")
+                const {parentId} = param;
+                temp.content = updTreeChildren(parentContent, res, parentId);
+                // 更新选中数据
+                temp.archivesInfo = res;
             }
+            actions.product.updateState(temp);
+            callback(res);
         },
 
         // 删除档案
-        async delProduct(param = {}, getState) {
+        async delProduct({param, callback}, getState) {
+            actions.product.updateState({showLoading: true});
             let {result} = processData(await api.delProduct(param), '删除成功');
             const {data: res} = result;
+            let parentContent = getState().product.content;
+            // 取消loading
+            let temp = {showLoading: false};
             if (res) {
-                console.log("添加成功")
+                const {id} = res;
+                temp.content = delTreeChildren(parentContent, id);
+                // todo 选中那个节点
+                temp.archivesInfo = {};
             }
+            actions.product.updateState(temp);
+            callback(res);
         },
 
 

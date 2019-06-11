@@ -124,22 +124,6 @@ class TreeForm extends Component {
 
 
                 <FormItem className="auto-form-item">
-                    <Label className="auto-label red-star">内部编码</Label>
-                    <div className="auto-content">
-                        <FormControl className="auto-input" disabled={status}
-                                     {...getFieldProps('inner_code', {
-                                         initialValue: archivesInfo.inner_code || '',
-                                         rules: [{
-                                             required: true,
-                                             message: '请输入内部编码'
-                                         }],
-                                     })}
-                        />
-                        <FormError errorMsg={getFieldError('inner_code')}/>
-                    </div>
-                </FormItem>
-
-                <FormItem className="auto-form-item">
                     <Label className="auto-label red-star">备注</Label>
                     <div className="auto-content">
                         <FormControl className="auto-input" disabled={status}

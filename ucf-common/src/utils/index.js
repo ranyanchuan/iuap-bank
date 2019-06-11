@@ -627,7 +627,8 @@ export function addTreeChildren(tree, content, parentId) {
     for (const [index, item] of tree.entries()) {
         let {id, children} = item;
         if (id === parentId) {
-            tree[index].children = content;
+            const {children} = tree[index];
+            tree[index].children = [...children, ...content];
             break;
         } else {
             if (children && children.length > 0) { // 递归查询
@@ -639,6 +640,7 @@ export function addTreeChildren(tree, content, parentId) {
 }
 
 
+// 删除树节点
 export function delTreeChildren(tree, currentId) {
 
     if (tree && tree.length === 0) {
@@ -647,7 +649,7 @@ export function delTreeChildren(tree, currentId) {
     for (const [index, item] of tree.entries()) {
         let {id, children} = item;
         if (id === currentId) {
-            tree[index].splice(0, index);
+            tree[index].splice(index, 1);
             break;
         } else {
             if (children && children.length > 0) { // 递归查询
@@ -658,7 +660,27 @@ export function delTreeChildren(tree, currentId) {
     return tree;
 }
 
+// 更新数节点
 
+
+export function updTreeChildren(tree, node, currentId) {
+
+    if (tree && tree.length === 0) {
+        return tree;
+    }
+    for (const [index, item] of tree.entries()) {
+        let {id, children} = item;
+        if (id === currentId) {
+            tree[index] = node;
+            break;
+        } else {
+            if (children && children.length > 0) { // 递归查询
+                updTreeChildren(children, node, currentId)
+            }
+        }
+    }
+    return tree;
+}
 
 
 

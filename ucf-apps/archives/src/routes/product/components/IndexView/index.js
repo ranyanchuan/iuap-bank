@@ -13,7 +13,6 @@ import './index.less';
 // 定义组件类常量
 const {TreeNode} = Tree;
 
-
 const {LeftContainer, RightContainer} = AltWidthLayout;
 
 class IndexView extends Component {
@@ -47,9 +46,8 @@ class IndexView extends Component {
         if (nextContent && nextContent.length > 0 && nextContent !== content) {
             // 默认选中第一个
             const {id: searchTreeId} = nextContent[0];
-            this.setState({searchTreeId});
+            this.setState({searchTreeId, btnStatus: 'view'});
         }
-
     }
 
 
@@ -102,7 +100,6 @@ class IndexView extends Component {
      */
     onLoadData = (treeNode) => {
 
-        console.log("treeNode", treeNode);
         let id = treeNode.props['eventKey'];
         let _this = this;
 
@@ -160,8 +157,13 @@ class IndexView extends Component {
 
     // 删除节点
     onDelete = () => {
-        const {searchTreeId} = this.state;
-        actions.product.delProduct([{id: searchTreeId}]);
+        const {searchTreeId: id} = this.state;
+        actions.product.delProduct({
+            param: {id},
+            callback: (value) => {
+                console.log("delProduct",value);
+            }
+        });
     }
 
 
@@ -175,13 +177,38 @@ class IndexView extends Component {
             const {searchTreeId, btnStatus} = this.state;
             formData.parentId = searchTreeId;
             if (btnStatus === 'add') {  // 添加表单数据
-                actions.product.addProduct(formData);
-            } else {
-                // 更新表单数据
+                actions.product.addProduct({
+                    param: formData,
+                    callback: (value) => { // 添加加成功回调
+                        if (value) {
+                            this.saveUpdateState(value);
+                        }
+                    }
+                });
+            } else {  // 更新表单数据
                 const {archivesInfo} = this.props;
-                actions.product.updateProduct({...archivesInfo, ...formData});
+                actions.product.updateProduct({
+                    param: {...archivesInfo, ...formData},
+                    callback: (value) => { // 修改成功成功回调
+                        if (value) {
+                            this.saveUpdateState(value);
+                        }
+                    }
+                });
             }
         }
+    }
+
+    saveUpdateState = (param) => {
+        const {id: searchTreeId, parentId} = param;
+        const expandedKeys = [parentId];
+
+        this.setState({
+            btnStatus: 'view',
+            autoExpandParent: true,
+            searchTreeId,
+            expandedKeys
+        });
     }
 
 
@@ -209,6 +236,7 @@ class IndexView extends Component {
         const {searchValue, searchTreeId, btnStatus, expandedKeys, autoExpandParent} = _this.state;
 
         console.log("content", content);
+        console.log("btnStatus", btnStatus, autoExpandParent, expandedKeys);
 
         // 节点循环
         const loop2 = data => data.map(item => {
