@@ -70,10 +70,37 @@ export default {
             let cacheTree = deepClone(getState().product.content);
 
             const {id} = param || {};
-
+            // 在父节点下添加子节点
             const newContent = addTreeChildren(cacheTree, content, id);
             actions.product.updateState({content: newContent});
 
+        },
+
+
+        /**
+         * 加载列表数据
+         * @param {*} param
+         * @param {*} getState
+         */
+        async getTreeByValue(param, getState) {
+
+            let {result} = processData(await api.getTreeByValue(param));
+            let {data: res} = result;
+
+
+
+            console.log("res", res);
+
+
+            //
+            // let content = res && res.content || [];
+            //
+            // let cacheTree = deepClone(getState().product.content);
+            //
+            // const {id} = param || {};
+            // // 在父节点下添加子节点
+            // const newContent = addTreeChildren(cacheTree, content, id);
+            // actions.product.updateState({content: newContent});
 
         },
 
@@ -96,9 +123,10 @@ export default {
             const {data: res} = result;
             let parentContent = getState().product.content;
             if (res) {
-                console.log("添加成功", res)
+                console.log("添加成功", res);
+                const {parentId}=param;
                 let currentContent = res && res.content || [];
-                const content = addChild(parentContent, currentContent);
+                const content = addTreeChildren(parentContent, currentContent,parentId);
                 actions.product.updateState({content});
             }
         },
@@ -108,7 +136,7 @@ export default {
             let {result} = processData(await api.updateProduct(param), '更新成功');
             const {data: res} = result;
             if (res) {
-                console.log("添加成功")
+                console.log("更新成功")
             }
         },
 

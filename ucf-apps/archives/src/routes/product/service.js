@@ -5,8 +5,9 @@ const URL = {
     "GET_TREE": `${GROBAL_HTTP_TREE}/product/getSonNodes`,
     "ADD_PRODUCT": `${GROBAL_HTTP_TREE}/product/insertSelective`,
     "UPD_PRODUCT": `${GROBAL_HTTP_TREE}/product/updateSelective`,
-    "GET_PRODUCT": `${GROBAL_HTTP_TREE}/product/getNodeById`, // 获取节点档案信息与更新同一接口
+    "GET_PRODUCT": `${GROBAL_HTTP_TREE}/product/getNodeById`,
     "DEL_PRODUCT": `${GROBAL_HTTP_TREE}/product/deleteBatch`,
+    "GET_TREE_BY_VALUE": `${GROBAL_HTTP_TREE}/product/dataSearchNodes`,
 }
 
 /**
@@ -66,3 +67,16 @@ export const delProduct = (param) => {
         data: param
     });
 }
+
+
+/**
+ * 获取节点档案信息
+ * @param {*} params
+ */
+export const getTreeByValue = (param) => {
+    return request(URL.GET_TREE_BY_VALUE, {
+        method: "get",
+        param
+    });
+}
+

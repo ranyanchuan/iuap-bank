@@ -46,13 +46,6 @@ class IndexView extends Component {
     }
 
 
-    //
-    // test1(){
-    //     console.log("xxxx",this);
-    //     debugger
-    // }
-
-
     componentWillReceiveProps(nextProps) {
         const {content} = this.props;
         const {content: nextContent} = nextProps;
@@ -82,12 +75,7 @@ class IndexView extends Component {
      * @param {string} value 搜索框的输入值
      */
     onChange = value => {
-
-        let _this = this;
-        _this.setState({
-            searchValue: value
-        })
-
+        this.setState({searchValue: value});
     }
 
     /**
@@ -96,13 +84,8 @@ class IndexView extends Component {
      * @param {string} searchValue 搜索框的输入值
      */
     onSearch = async () => {
-
-        let _this = this,
-            {searchValue} = _this.state;
-
-        await actions.product.getSearchTree({
-            searchValue
-        })
+        const {searchValue} = this.state;
+        await actions.product.getTreeByValue({name: searchValue})
     }
 
 
@@ -199,22 +182,26 @@ class IndexView extends Component {
 
         // 获取表单数据
         let formData = this.child.onSaveForm();
-        if (formData) {
-            const {searchTreeId} = this.state;
-            formData.parentId = searchTreeId;
-            // 添加表单数据
-            actions.product.addProduct(formData);
-        }
 
-        // actions.product.addProduct();
-        // actions.product.updateProduct();
+        if (formData) {
+            const {searchTreeId, btnStatus} = this.state;
+            formData.parentId = searchTreeId;
+
+            debugger
+            if (btnStatus === 'add') {  // 添加表单数据
+                actions.product.addProduct(formData);
+            } else {
+                // 更新表单数据
+                const {archivesInfo} = this.props;
+                actions.product.updateProduct({...archivesInfo, ...formData});
+            }
+        }
     }
 
 
     // 添加
     onAddStatus = () => {
-        this.setState({btnStatus: 'add'})
-        actions.product.updateState({archivesInfo: {}}); // 更新 archivesInfo
+        this.setState({btnStatus: 'add'});
     }
 
     // 编辑
@@ -223,80 +210,9 @@ class IndexView extends Component {
         // todo 获取当前节点内容
     }
 
-
-    onAddNode = (item) => {
-        console.log("item", item);
-
-        const {id, children} = item;
-        if (id) {
-
-
-        }
-
-        const data = this.state.treeData;
-        let parNode;
-        if (prKey) {
-            // 如果prKey存在则搜索父节点进行添加
-            parNode = this.getNodeByKey(data, prKey);
-            //如果父节点存在的话，添加到父节点上
-            if (parNode) {
-                if (!parNode.children) {
-                    parNode.children = [];
-                }
-                // 如果key不存在就动态生成一个
-                if (!nodeItem.key) {
-                    nodeItem.key = prKey + parNode.children.length + 1;
-                }
-                parNode.children.push(nodeItem);
-            }
-        } else {
-            // 没有穿prKey添加到根下成为一级节点
-            if (!nodeItem.key) {
-                nodeItem.key = "0-" + data.length + 1;
-            }
-            data.push(nodeItem);
-        }
-
-        this.setState({
-            data
-        });
-
-    }
-
-
-    /**
-     * 增加节点
-     * @param string prKey    [父节点key]
-     * @param object nodeItem [子节点信息]
-     */
-    addNode(prKey, nodeItem) {
-        const data = this.state.treeData;
-        let parNode;
-        if (prKey) {
-            // 如果prKey存在则搜索父节点进行添加
-            parNode = this.getNodeByKey(data, prKey);
-            //如果父节点存在的话，添加到父节点上
-            if (parNode) {
-                if (!parNode.children) {
-                    parNode.children = [];
-                }
-                // 如果key不存在就动态生成一个
-                if (!nodeItem.key) {
-                    nodeItem.key = prKey + parNode.children.length + 1;
-                }
-                parNode.children.push(nodeItem);
-            }
-        } else {
-            // 没有穿prKey添加到根下成为一级节点
-            if (!nodeItem.key) {
-                nodeItem.key = "0-" + data.length + 1;
-            }
-            data.push(nodeItem);
-        }
-
-        this.setState({
-            data
-        });
+    // 取消
+    onCancel = () => {
+        this.setState({btnStatus: 'view'});
     }
 
 
@@ -436,14 +352,14 @@ class IndexView extends Component {
                             </div> :
                             <div className="action-content">
                                 <Button colors="primary" onClick={this.onSave}>保存</Button>
-                                <Button onClick={this.onDelete} bordered>取消</Button>
+                                <Button onClick={this.onCancel} bordered>取消</Button>
                             </div>
                         }
 
 
                         <TreeForm  // 设置ref属性
                             onRef={ref => this.child = ref}
-                            archivesInfo={archivesInfo}
+                            archivesInfo={btnStatus !== 'add' ? archivesInfo : {}}
                             status={['add', 'update'].includes(btnStatus) ? false : true}
                         />
                     </RightContainer>
