@@ -3,7 +3,7 @@ import {actions} from "mirrorx";
 import * as api from "./service";
 // 接口返回数据公共处理方法，根据具体需要
 
-import {processData, addChild, handleChild, deepClone, addTreeChildren} from "utils";
+import {processData, addChild, handleChild, deepClone, addTreeChildren, delTreeChildren} from "utils";
 
 export default {
     // 确定 Store 中的数据模型作用域
@@ -14,32 +14,6 @@ export default {
         content: [], // 树内容
         archivesInfo: {}, // 档案信息
         cacheTree: [],
-        paginationParam: {
-            reqParam: {
-                search_treeId: "",
-                title: "",
-                hierarchy: "",
-                pageIndex: 0,
-                pageSize: 25,
-            },
-            resParam: {
-                totalPages: 0,
-                total: 0
-            }
-        },
-        tableData: [],
-        tableSelValue: [],
-        comModalParam: {
-            showModal: false,
-            initEditValue: {},
-            btnFlag: 0
-        },
-        delModal: false,
-        searchRes: {
-            expandedKeys: [],
-            autoExpandParent: false
-        },
-
     },
     reducers: {
         /**
@@ -87,10 +61,7 @@ export default {
             let {result} = processData(await api.getTreeByValue(param));
             let {data: res} = result;
 
-
-
             console.log("res", res);
-
 
             //
             // let content = res && res.content || [];
@@ -119,14 +90,13 @@ export default {
         async addProduct(param = {}, getState) {
 
             const {result} = processData(await api.addProduct(param), '添加成功');
-            debugger
+
             const {data: res} = result;
             let parentContent = getState().product.content;
             if (res) {
-                console.log("添加成功", res);
-                const {parentId}=param;
+                const {parentId} = param;
                 let currentContent = res && res.content || [];
-                const content = addTreeChildren(parentContent, currentContent,parentId);
+                const content = addTreeChildren(parentContent, currentContent, parentId);
                 actions.product.updateState({content});
             }
         },

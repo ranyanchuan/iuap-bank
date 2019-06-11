@@ -636,6 +636,31 @@ export function addTreeChildren(tree, content, parentId) {
         }
     }
     return tree;
-
 }
+
+
+export function delTreeChildren(tree, currentId) {
+
+    if (tree && tree.length === 0) {
+        return tree;
+    }
+    for (const [index, item] of tree.entries()) {
+        let {id, children} = item;
+        if (id === currentId) {
+            tree[index].splice(0, index);
+            break;
+        } else {
+            if (children && children.length > 0) { // 递归查询
+                delTreeChildren(children, currentId)
+            }
+        }
+    }
+    return tree;
+}
+
+
+
+
+
+
 

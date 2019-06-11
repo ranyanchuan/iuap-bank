@@ -16,12 +16,6 @@ const {TreeNode} = Tree;
 
 const {LeftContainer, RightContainer} = AltWidthLayout;
 
-function test() {
-    console.log("xxxx");
-    debugger
-}
-
-
 class IndexView extends Component {
 
     constructor(props) {
@@ -31,6 +25,7 @@ class IndexView extends Component {
             searchTreeId: '',
             btnStatus: 'view',
             expandedKeys: [],
+            autoExpandParent: false,
             editNode: {
                 isHover: "",
                 editKey: ""
@@ -60,13 +55,6 @@ class IndexView extends Component {
 
     onExpand = expandedKeys => {
         this.setState({expandedKeys})
-        // expandedKeys为指定展开的节点
-        // actions.product.updateState({
-        //     searchRes: {
-        //         expandedKeys,
-        //         autoExpandParent: false
-        //     }
-        // })
     }
 
     /**
@@ -85,7 +73,7 @@ class IndexView extends Component {
      */
     onSearch = async () => {
         const {searchValue} = this.state;
-        await actions.product.getTreeByValue({name: searchValue})
+        await actions.product.getTreeByValue({searchValue})
     }
 
 
@@ -186,8 +174,6 @@ class IndexView extends Component {
         if (formData) {
             const {searchTreeId, btnStatus} = this.state;
             formData.parentId = searchTreeId;
-
-            debugger
             if (btnStatus === 'add') {  // 添加表单数据
                 actions.product.addProduct(formData);
             } else {
@@ -218,11 +204,9 @@ class IndexView extends Component {
 
     render() {
         const _this = this;
-        let {showLoading, content, searchRes, archivesInfo} = _this.props,
-            {autoExpandParent} = searchRes;
+        let {showLoading, content, archivesInfo} = _this.props;
 
-
-        const {searchValue, searchTreeId, btnStatus, expandedKeys} = _this.state;
+        const {searchValue, searchTreeId, btnStatus, expandedKeys, autoExpandParent} = _this.state;
 
         console.log("content", content);
 
