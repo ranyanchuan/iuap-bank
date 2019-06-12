@@ -44,6 +44,8 @@ module.exports = (env, argv) => {
                 },
                 //要代理访问的对方路由
                 router: [
+                    '/newref/',
+                    '/pap_basedoc/',
                     '/iuap_walsin_demo',
                     '/iuap-saas-message-center/',
                     '/iuap-saas-filesystem-service/',

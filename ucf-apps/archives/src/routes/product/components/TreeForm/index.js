@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 
-import {Loading, Tree, Icon, Col, Row, Form, Label, Button, FormControl, Select, InputNumber} from 'tinper-bee';
+import {Form, Label, Button, FormControl, Select, InputNumber} from 'tinper-bee';
 import FormError from 'components/FormError';
-
+import RefCommon from 'components/RefCommon';
 import './index.less';
 
 const FormItem = Form.FormItem;
@@ -146,29 +146,29 @@ class TreeForm extends Component {
                     </div>
                 </FormItem>
 
-                {/*<FormItem className="auto-form-item">*/}
-                {/*<Label className="auto-label red-star">组织机构</Label>*/}
-                {/*<div className="auto-content">*/}
-                {/*<RefCommon*/}
-                {/*// rowData={typeof rowData !== 'undefined' && rowData}*/}
-                {/*// btnFlag={typeof btnFlag !== 'undefined' && btnFlag}*/}
-                {/*type={1}*/}
-                {/*title={'组织机构'}*/}
-                {/*refPath={'/pap_basedoc/common-ref/'}*/}
-                {/*param={{*/}
-                {/*refCode: 'neworganizition_tree'*/}
-                {/*}}*/}
-
-                {/*{...getFieldProps('orgId', {*/}
-                {/*initialValue: JSON.stringify({*/}
-                {/*refname: (typeof rowData !== 'undefined' && rowData['orgName']) || '',*/}
-                {/*refpk: (typeof rowData !== 'undefined' && rowData['orgId']) || ''*/}
-                {/*}),*/}
-                {/*})}*/}
-                {/*/>*/}
-                {/*<FormError errorMsg={getFieldError('orgId')}/>*/}
-                {/*</div>*/}
-                {/*</FormItem>*/}
+                <FormItem className="auto-form-item">
+                    <Label className="auto-label red-star">组织机构</Label>
+                    <div className="auto-content">
+                        <RefCommon
+                            rowData={typeof archivesInfo !== 'undefined' && archivesInfo}
+                            // btnFlag={typeof btnFlag !== 'undefined' && btnFlag}
+                            type={1}
+                            title={'组织机构'}
+                            refPath={'/pap_basedoc/common-ref/'
+                            }
+                            param={{
+                                refCode: 'neworganizition_tree'
+                            }}
+                            {...getFieldProps('orgId', {
+                                initialValue: JSON.stringify({
+                                    refname: (typeof archivesInfo !== 'undefined' && archivesInfo['orgName']) || '',
+                                    refpk: (typeof archivesInfo !== 'undefined' && archivesInfo['orgId']) || ''
+                                }),
+                            })}
+                        />
+                        <FormError errorMsg={getFieldError('orgId')}/>
+                    </div>
+                </FormItem>
 
 
                 <FormItem className="auto-form-item">

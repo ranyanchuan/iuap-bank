@@ -26,13 +26,14 @@
     "bee-complex-grid": "^2.0.13",
     "bee-locale": "0.0.13",
     "bee-table": "^2.0.15",
-    "tinper-bee": "^2.0.9",
     "classnames": "^2.2.6",
     "mirrorx": "^0.2.13",
+    "pap-refer": "^1.0.6",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-intl": "^2.8.0",
+    "tinper-bee": "^2.0.9",
     "ucf-fe": "^0.1.0",
     "ucf-request": "^1.0.0"
   }
