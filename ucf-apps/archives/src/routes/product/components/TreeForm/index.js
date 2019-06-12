@@ -18,6 +18,7 @@ class TreeForm extends Component {
     }
 
     componentDidMount() {
+
         const {onRef} = this.props;
         if (onRef) {
             this.props.onRef(this)
@@ -25,6 +26,9 @@ class TreeForm extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
+        this.props.form.resetFields();// 重置表单
+
         const {archivesInfo} = nextProps;
         if (archivesInfo && archivesInfo.name) {
             this.props.form.resetFields();// 重置表单
@@ -34,9 +38,17 @@ class TreeForm extends Component {
 
     onSaveForm = () => { // 获取表单数据
         let result = null;
+
+        const temp = this.props.form.getFieldsValue(['orgId']).orgId;
+
+        const {refpk: orgId, refname: orgName} = JSON.parse(temp);
+
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 result = values; //  验证通过
+                result.orgId = orgId;
+                result.orgName = orgName;
+
             }
         });
         return result;
@@ -47,10 +59,11 @@ class TreeForm extends Component {
         const _this = this;
         const {form, archivesInfo, status} = _this.props;
 
-        const disabled = ['add', 'update'].includes(status) ? false : true
-
-
+        const disabled = ['add', 'update'].includes(status) ? false : true;
         const {getFieldProps, getFieldError} = form;
+
+
+
 
         return (
             <Form className="auto-form">
@@ -150,6 +163,7 @@ class TreeForm extends Component {
                     <Label className="auto-label red-star">组织机构</Label>
                     <div className="auto-content">
                         <RefCommon
+                            disabled={disabled}
                             rowData={typeof archivesInfo !== 'undefined' && archivesInfo}
                             // btnFlag={typeof btnFlag !== 'undefined' && btnFlag}
                             type={1}
@@ -165,6 +179,7 @@ class TreeForm extends Component {
                                     refpk: (typeof archivesInfo !== 'undefined' && archivesInfo['orgId']) || ''
                                 }),
                             })}
+
                         />
                         <FormError errorMsg={getFieldError('orgId')}/>
                     </div>

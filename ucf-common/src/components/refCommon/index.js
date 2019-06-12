@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {RefMultipleTableWithInput, RefTreeWithInput} from 'pap-refer/dist/index';
+import {RefMultipleTableWithInput} from 'pap-refer/dist/index';
+import RefTreeWithInput from 'pap-refer/lib/pap-common-tree/src/index';
 import "pap-refer/dist/index.css"
 import {formatRefPath} from 'utils/tools';
 
@@ -14,6 +15,8 @@ const RefEnum = {
     transfer: 5,
     multipleTable: 6
 }
+
+
 
 const propTypes = {
     type: PropTypes.number,
