@@ -27,12 +27,14 @@ class TreeForm extends Component {
 
     componentWillReceiveProps(nextProps) {
 
-        this.props.form.resetFields();// 重置表单
-
         const {archivesInfo} = nextProps;
-        if (archivesInfo && archivesInfo.name) {
+        if (this.props.archivesInfo !== archivesInfo) {
             this.props.form.resetFields();// 重置表单
         }
+    }
+
+    onResetField = () => {
+        this.props.form.resetFields();// 重置表单
     }
 
 
@@ -61,8 +63,6 @@ class TreeForm extends Component {
 
         const disabled = ['add', 'update'].includes(status) ? false : true;
         const {getFieldProps, getFieldError} = form;
-
-
 
 
         return (
@@ -164,7 +164,7 @@ class TreeForm extends Component {
                     <div className="auto-content">
                         <RefCommon
                             disabled={disabled}
-                            rowData={typeof archivesInfo !== 'undefined' && archivesInfo}
+                            // rowData={typeof archivesInfo !== 'undefined' && archivesInfo}
                             // btnFlag={typeof btnFlag !== 'undefined' && btnFlag}
                             type={1}
                             title={'组织机构'}
