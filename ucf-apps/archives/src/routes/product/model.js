@@ -107,7 +107,9 @@ export default {
                 temp.archivesInfo = res;
             }
             actions.product.updateState(temp);
-            callback(res);
+            if (callback) {
+                callback(res);
+            }
         },
 
         // 更新档案
@@ -126,11 +128,13 @@ export default {
                 temp.archivesInfo = res;
             }
             actions.product.updateState(temp);
-            callback(res);
+            if (callback) {
+                callback(res);
+            }
         },
 
         // 删除档案
-        async delProduct({param, callback}, getState) {
+        async delProduct(param, getState) {
             actions.product.updateState({showLoading: true});
             let {result} = processData(await api.delProduct(param), '删除成功');
             const {data: res} = result;
@@ -138,11 +142,12 @@ export default {
             // 取消loading
             let temp = {showLoading: false};
             if (res) {
-                const {id} = res;
+                const {id} = param;
                 temp.content = delTreeChildren(parentContent, id);
+                // 更新选中数据
+                temp.archivesInfo = {};
             }
             actions.product.updateState(temp);
-            callback(res);
         },
 
 

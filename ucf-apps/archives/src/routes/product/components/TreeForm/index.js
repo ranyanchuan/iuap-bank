@@ -18,11 +18,16 @@ class TreeForm extends Component {
     }
 
     componentDidMount() {
-        // actions.query.loadList(this.props.queryParam); // 查询默认条件
-        // actions.product.getProductTreeData(); // 获取产品树
         const {onRef} = this.props;
         if (onRef) {
             this.props.onRef(this)
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const {archivesInfo} = nextProps;
+        if (archivesInfo && archivesInfo.name) {
+            this.props.form.resetFields();// 重置表单
         }
     }
 
@@ -40,7 +45,7 @@ class TreeForm extends Component {
 
     render() {
         const _this = this;
-        const {form, showLoading, archivesInfo, status} = _this.props;
+        const {form, archivesInfo, status} = _this.props;
 
         const disabled = ['add', 'update'].includes(status) ? false : true
 

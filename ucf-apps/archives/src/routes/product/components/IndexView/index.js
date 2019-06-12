@@ -47,7 +47,7 @@ class IndexView extends Component {
 
 
     onExpand = expandedKeys => {
-        this.setState({expandedKeys})
+        this.setState({expandedKeys, autoExpandParent: false})
     }
 
     /**
@@ -156,12 +156,7 @@ class IndexView extends Component {
     // 删除节点
     onDelete = () => {
         const {searchTreeId: id} = this.state;
-        actions.product.delProduct({
-            param: {id},
-            callback: (value) => {
-                console.log("delProduct", value);
-            }
-        });
+        actions.product.delProduct({id});
     }
 
 
@@ -218,7 +213,6 @@ class IndexView extends Component {
     // 编辑
     onUpdateStatus = () => {
         this.setState({btnStatus: 'update'});
-        // todo 获取当前节点内容
     }
 
     // 取消
@@ -315,8 +309,7 @@ class IndexView extends Component {
                                         // 打开或关闭节点时触发的方法
                                         onExpand={_this.onExpand}
                                         expandedKeys={expandedKeys}
-                                        // autoExpandParent={autoExpandParent}
-                                        // autoExpandParent={true}
+                                        autoExpandParent={autoExpandParent}
 
                                         // 默认是否展开所有节点
                                         defaultExpandAll={true}
