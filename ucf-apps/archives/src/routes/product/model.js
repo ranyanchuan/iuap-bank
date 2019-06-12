@@ -49,11 +49,11 @@ export default {
 
             let content = res && res.content || [];
 
-            let cacheTree = deepClone(getState().product.content);
+            let tree = deepClone(getState().product.content);
 
             const {id} = param || {};
             // 在父节点下添加子节点
-            const newContent = addTreeChildren(cacheTree, content, id);
+            const newContent = addTreeChildren(tree, content, id);
             actions.product.updateState({content: newContent});
 
         },
@@ -66,20 +66,16 @@ export default {
          */
         async getTreeByValue(param, getState) {
 
+            actions.product.updateState({showLoading: true});
             let {result} = processData(await api.getTreeByValue(param));
             let {data: res} = result;
 
-            console.log("res", res);
-
-            //
-            // let content = res && res.content || [];
-            //
-            // let cacheTree = deepClone(getState().product.content);
-            //
-            // const {id} = param || {};
-            // // 在父节点下添加子节点
-            // const newContent = addTreeChildren(cacheTree, content, id);
-            // actions.product.updateState({content: newContent});
+            let temp = {showLoading: false, archivesInfo: {}};
+            const {content} = res || {};
+            if (content) {
+                temp.content = content;
+            }
+            actions.product.updateState(temp);
 
         },
 
@@ -116,6 +112,7 @@ export default {
 
         // 更新档案
         async updateProduct({param, callback}, getState) {
+            actions.product.updateState({showLoading: true});
             let {result} = processData(await api.updateProduct(param), '更新成功');
 
             const {data: res} = result;
@@ -123,8 +120,8 @@ export default {
             // 取消loading
             let temp = {showLoading: false};
             if (res) {
-                const {parentId} = param;
-                temp.content = updTreeChildren(parentContent, res, parentId);
+                const {id} = param;
+                temp.content = updTreeChildren(parentContent, res, id);
                 // 更新选中数据
                 temp.archivesInfo = res;
             }
@@ -143,8 +140,6 @@ export default {
             if (res) {
                 const {id} = res;
                 temp.content = delTreeChildren(parentContent, id);
-                // todo 选中那个节点
-                temp.archivesInfo = {};
             }
             actions.product.updateState(temp);
             callback(res);

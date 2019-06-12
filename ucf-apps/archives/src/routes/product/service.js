@@ -4,7 +4,7 @@ import {deepClone} from 'utils';
 const URL = {
     "GET_TREE": `${GROBAL_HTTP_TREE}/product/getSonNodes`,
     "ADD_PRODUCT": `${GROBAL_HTTP_TREE}/product/insertSelective`,
-    "UPD_PRODUCT": `${GROBAL_HTTP_TREE}/product/updateSelective`,
+    "UPD_PRODUCT": `${GROBAL_HTTP_TREE}/product/update`,
     "GET_PRODUCT": `${GROBAL_HTTP_TREE}/product/getNodeById`,
     "DEL_PRODUCT": `${GROBAL_HTTP_TREE}/product/delete `,
     "GET_TREE_BY_VALUE": `${GROBAL_HTTP_TREE}/product/dataSearchNodes`,

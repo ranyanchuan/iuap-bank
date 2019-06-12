@@ -24,12 +24,7 @@ class IndexView extends Component {
             searchTreeId: '',
             btnStatus: 'view',
             expandedKeys: [],
-            autoExpandParent: false,
-            editNode: {
-                isHover: "",
-                editKey: ""
-            }
-
+            autoExpandParent: true,
         }
 
     }
@@ -70,8 +65,11 @@ class IndexView extends Component {
      * @param {string} searchValue 搜索框的输入值
      */
     onSearch = async () => {
+        const {id: searchTreeId} = this.props.content[0];
         const {searchValue} = this.state;
-        await actions.product.getTreeByValue({searchValue})
+        await actions.product.getTreeByValue({searchValue});
+        // 更新选中数据
+        this.setState({searchTreeId});
     }
 
 
@@ -161,7 +159,7 @@ class IndexView extends Component {
         actions.product.delProduct({
             param: {id},
             callback: (value) => {
-                console.log("delProduct",value);
+                console.log("delProduct", value);
             }
         });
     }
@@ -175,8 +173,8 @@ class IndexView extends Component {
 
         if (formData) {
             const {searchTreeId, btnStatus} = this.state;
-            formData.parentId = searchTreeId;
             if (btnStatus === 'add') {  // 添加表单数据
+                formData.parentId = searchTreeId;
                 actions.product.addProduct({
                     param: formData,
                     callback: (value) => { // 添加加成功回调
@@ -235,8 +233,8 @@ class IndexView extends Component {
 
         const {searchValue, searchTreeId, btnStatus, expandedKeys, autoExpandParent} = _this.state;
 
-        console.log("content", content);
-        console.log("btnStatus", btnStatus, autoExpandParent, expandedKeys);
+        // console.log("content", content);
+        /*console.log("btnStatus", btnStatus, autoExpandParent, expandedKeys);*/
 
         // 节点循环
         const loop2 = data => data.map(item => {
@@ -317,7 +315,8 @@ class IndexView extends Component {
                                         // 打开或关闭节点时触发的方法
                                         onExpand={_this.onExpand}
                                         expandedKeys={expandedKeys}
-                                        autoExpandParent={autoExpandParent}
+                                        // autoExpandParent={autoExpandParent}
+                                        // autoExpandParent={true}
 
                                         // 默认是否展开所有节点
                                         defaultExpandAll={true}
@@ -372,7 +371,7 @@ class IndexView extends Component {
                         <TreeForm  // 设置ref属性
                             onRef={ref => this.child = ref}
                             archivesInfo={btnStatus !== 'add' ? archivesInfo : {}}
-                            status={['add', 'update'].includes(btnStatus) ? false : true}
+                            status={btnStatus}
                         />
                     </RightContainer>
                 </AltWidthLayout>

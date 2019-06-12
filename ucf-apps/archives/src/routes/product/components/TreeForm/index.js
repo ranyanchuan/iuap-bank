@@ -42,6 +42,8 @@ class TreeForm extends Component {
         const _this = this;
         const {form, showLoading, archivesInfo, status} = _this.props;
 
+        const disabled = ['add', 'update'].includes(status) ? false : true
+
 
         const {getFieldProps, getFieldError} = form;
 
@@ -51,7 +53,7 @@ class TreeForm extends Component {
                 <FormItem className="auto-form-item">
                     <Label className="auto-label red-star">产品名称</Label>
                     <div className="auto-content">
-                        <FormControl className="auto-input" disabled={status}
+                        <FormControl className="auto-input" disabled={disabled}
                                      {...getFieldProps('name', {
                                          initialValue: archivesInfo.name || '',
                                          rules: [{
@@ -67,7 +69,7 @@ class TreeForm extends Component {
                 <FormItem className="auto-form-item">
                     <Label className="auto-label red-star">产品属性</Label>
                     <div className="auto-content">
-                        <FormControl className="auto-input" disabled={status}
+                        <FormControl className="auto-input" disabled={disabled}
 
                                      {...getFieldProps('pk_prod_attr', {
                                          initialValue: archivesInfo.pk_prod_attr || '',
@@ -86,7 +88,7 @@ class TreeForm extends Component {
                     <Label className="auto-label red-star">产品编码</Label>
                     <div className="auto-content">
                         <FormControl className="auto-input"
-                                     disabled={status}
+                                     disabled={status !== 'add'}
                                      {...getFieldProps('code', {
                                          initialValue: archivesInfo.code || '',
                                          rules: [{
@@ -103,7 +105,7 @@ class TreeForm extends Component {
                 <FormItem className="auto-form-item">
                     <Label className="auto-label red-star">产品分类</Label>
                     <div className="auto-content">
-                        <Select disabled={status}
+                        <Select disabled={disabled}
                                 {...getFieldProps('pk_product_type', {
                                         initialValue: archivesInfo.pk_product_type || '',
                                         rules: [{
@@ -126,7 +128,7 @@ class TreeForm extends Component {
                 <FormItem className="auto-form-item">
                     <Label className="auto-label red-star">备注</Label>
                     <div className="auto-content">
-                        <FormControl className="auto-input" disabled={status}
+                        <FormControl className="auto-input" disabled={disabled}
                                      {...getFieldProps('memo', {
                                          initialValue: archivesInfo.memo || '',
                                          rules: [{
@@ -167,7 +169,7 @@ class TreeForm extends Component {
                 <FormItem className="auto-form-item">
                     <Label className="auto-label red-star">是否启用</Label>
                     <div className="auto-content">
-                        <Select disabled={status}
+                        <Select disabled={disabled}
                                 {...getFieldProps('isEnable', {
                                         initialValue: archivesInfo.isEnable || '',
                                         rules: [{
