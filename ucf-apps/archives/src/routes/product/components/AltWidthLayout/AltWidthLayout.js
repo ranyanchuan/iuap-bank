@@ -73,24 +73,10 @@ class AltWidthLayout extends Component {
 
         let leftContainer = null;
         let rightContainer = null;
-        if (children instanceof Array) {
-            children.forEach(element => {
-                if (element.type.name === "LeftContainer") {
-                    leftContainer = element;
-                }
-                if (element.type.name === "RightContainer") {
-                    rightContainer = element;
-                }
-            });
-        } else {
-            if (children.type.name === "LeftContainer") {
-                leftContainer = children;
-            }
-            if (children.type.name === "RightContainer") {
-                rightContainer = children;
-            }
+        if (children && children.length > 1) {
+            leftContainer = children[0];
+            rightContainer = children[1];
         }
-
 
         return (
             <div style={{width: contentWidth, height: getHeight()}} className="alt-content">

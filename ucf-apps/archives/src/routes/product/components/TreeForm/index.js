@@ -179,6 +179,9 @@ class TreeForm extends Component {
                                     refpk: (typeof archivesInfo !== 'undefined' && archivesInfo['orgId']) || ''
                                 }),
                             })}
+                            onChange={(values, record) => {
+                                console.log("values, record", values, record);
+                            }}
 
                         />
                         <FormError errorMsg={getFieldError('orgId')}/>
